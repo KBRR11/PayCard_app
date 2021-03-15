@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_credit_card/flutter_credit_card.dart';
+import 'package:pay_card_app/bloc/pagar/pagar_bloc.dart';
 import 'package:pay_card_app/data/tarjetas.dart';
 import 'package:pay_card_app/helpers/helpers.dart';
 import 'package:pay_card_app/pages/tarjeta_page.dart';
@@ -29,12 +31,15 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         appBar: AppBar(
           title: Text('Pagar'),
-          actions: [IconButton(icon: Icon(Icons.add), onPressed: () async{
-            mostrarLoading(context);
-            await Future.delayed(Duration(seconds: 1));
-            Navigator.pop(context);
-
-          })],
+          actions: [
+            IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () async {
+                  mostrarLoading(context);
+                  await Future.delayed(Duration(seconds: 1));
+                  Navigator.pop(context);
+                })
+          ],
           centerTitle: true,
         ),
         body: Stack(
@@ -51,8 +56,8 @@ class _HomePageState extends State<HomePage> {
                     final tarjeta = tarjetas[i];
                     return GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                            context, navegarFadeIn(context, TarjetaPage()));
+                        BlocProvider.of<PagarBloc>(context).add(OnSeleccionartarjeta(tarjeta));
+                        Navigator.push(context, navegarFadeIn(context, TarjetaPage()));
                       },
                       child: Hero(
                         tag: tarjeta.cardNumber,
