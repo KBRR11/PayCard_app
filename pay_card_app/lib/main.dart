@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pay_card_app/bloc/pagar/pagar_bloc.dart';
 import 'package:pay_card_app/pages/home_page.dart';
 import 'package:pay_card_app/pages/pago_completo_page.dart';
+import 'package:pay_card_app/services/stripe_service.dart';
 
  
 void main() => runApp(MyApp());
@@ -11,6 +12,12 @@ class MyApp extends StatelessWidget {
  
   @override
   Widget build(BuildContext context) {
+
+   //final stripeService = new StripeService(); // *esta es la forma tradicional
+   //stripeService.init();                      // *pero se puede hacer de la siguiente manera..
+   // con esto inicializamos el StripeService
+   new StripeService()..init();
+
     return MultiBlocProvider(
           providers: [
             BlocProvider(create: (_) => PagarBloc(),)

@@ -6,6 +6,7 @@ import 'package:pay_card_app/bloc/pagar/pagar_bloc.dart';
 import 'package:pay_card_app/data/tarjetas.dart';
 import 'package:pay_card_app/helpers/helpers.dart';
 import 'package:pay_card_app/pages/tarjeta_page.dart';
+import 'package:pay_card_app/services/stripe_service.dart';
 import 'package:pay_card_app/widgets/total_pay_button.dart';
 import 'package:flutter/services.dart';
 
@@ -23,21 +24,29 @@ class _HomePageState extends State<HomePage> {
   //   });
   //   super.initState();
   // }
+  
+  final stripeService = new StripeService();
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final pagarBloc = BlocProvider.of<PagarBloc>(context);
 
     return Scaffold(
         appBar: AppBar(
           title: Text('Pagar'),
           actions: [
-            IconButton(
+            IconButton( 
                 icon: Icon(Icons.add),
                 onPressed: () async {
-                  mostrarLoading(context);
-                  await Future.delayed(Duration(seconds: 1));
-                  Navigator.pop(context);
+                  final amount = pagarBloc.state.montoPagarString;
+                  final currency = pagarBloc.state.tipoMoneda;
+                 final resp = await this.stripeService.pagarConNuevaTarjeta(amount: amount, currency: currency);
+                 if (resp.ok) {
+                   mostrarAlerta(context, 'Tarjeta Ok', 'Todo Correcto');
+                 } else {
+                   mostrarAlerta(context, 'Algo salió mal', resp.msg);
+                 }
                 })
           ],
           centerTitle: true,
