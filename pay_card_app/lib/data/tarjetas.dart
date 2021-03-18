@@ -7,7 +7,7 @@ final List<TarjetaCredito> tarjetas = <TarjetaCredito>[
       brand: 'visa',
       cvv: '213',
       expiracyDate: '01/25',
-      cardHolderName: 'Keny Ramírez'
+      cardHolderName: 'Fulano Ramírez'
     ),
     TarjetaCredito(
       cardNumberHidden: '5555',
@@ -15,7 +15,7 @@ final List<TarjetaCredito> tarjetas = <TarjetaCredito>[
       brand: 'mastercard',
       cvv: '213',
       expiracyDate: '01/25',
-      cardHolderName: 'Pedro Ramírez'
+      cardHolderName: 'Sócrates Pérez'
     ),
     TarjetaCredito(
       cardNumberHidden: '3782',
@@ -23,7 +23,7 @@ final List<TarjetaCredito> tarjetas = <TarjetaCredito>[
       brand: 'american express',
       cvv: '2134',
       expiracyDate: '01/25',
-      cardHolderName: 'Yuli Rodríguez'
+      cardHolderName: 'James Rodríguez'
     ),
     TarjetaCredito(
       cardNumberHidden: '6011',
@@ -31,7 +31,7 @@ final List<TarjetaCredito> tarjetas = <TarjetaCredito>[
       brand: 'Discover',
       cvv: '365',
       expiracyDate: '01/25',
-      cardHolderName: 'Santiago Ramírez'
+      cardHolderName: 'Leonel Messi'
     ),
     
   ];

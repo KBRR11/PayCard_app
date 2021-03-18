@@ -16,14 +16,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  //  @override
-  // void initState() {
-  //   setState(() {
-  //
-  //    SystemChrome.setEnabledSystemUIOverlays([]);
-  //   });
-  //   super.initState();
-  // }
+    
+    @override
+   void initState() {
+     BlocProvider.of<PagarBloc>(context).add(OnDesactivarTarjeta());
+     super.initState();
+   }
   
   final stripeService = new StripeService();
 
@@ -39,11 +37,14 @@ class _HomePageState extends State<HomePage> {
             IconButton( 
                 icon: Icon(Icons.add),
                 onPressed: () async {
+                  mostrarLoading(context);
                   final amount = pagarBloc.state.montoPagarString;
                   final currency = pagarBloc.state.tipoMoneda;
                  final resp = await this.stripeService.pagarConNuevaTarjeta(amount: amount, currency: currency);
+                 Navigator.pop(context);
                  if (resp.ok) {
-                   mostrarAlerta(context, 'Tarjeta Ok', 'Todo Correcto');
+                   //mostrarAlerta(context, 'Tarjeta Ok', 'Todo Correcto');
+                   Navigator.pushReplacementNamed(context, 'pago_completo');
                  } else {
                    mostrarAlerta(context, 'Algo salió mal', resp.msg);
                  }

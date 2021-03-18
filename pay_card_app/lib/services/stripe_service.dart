@@ -14,7 +14,7 @@ class StripeService {
   static String _secretKey =
       '--Your stripe secretKey--'; 
   String _publishableKey =
-      '--Your stripe publishableKey--'; 
+      '--Your stripe publishableKey--';
 
   final headerOptions = new Options(
       contentType: Headers.formUrlEncodedContentType,
@@ -27,13 +27,23 @@ class StripeService {
         merchantId: 'test'));
   }
 
-  Future pagarConTarjetaExistente(
-      {@required String amount,
-      @required String currency,
-      @required CreditCard card}) async {}
+  Future<StripeCustomResponse> pagarConTarjetaExistente({@required String amount, @required String currency, @required CreditCard card}) async {
+    try {
+      final paymentMethod = await StripePayment.createPaymentMethod(
+        PaymentMethodRequest(
+          card: card
+        )  
+      );
+      
+     final resp = await this._realizarPago(amount: amount, currency: currency, paymentMethod: paymentMethod);
 
-  Future<StripeCustomResponse> pagarConNuevaTarjeta(
-      {@required String amount, @required String currency}) async {
+      return resp;
+    } catch (e) {
+      return StripeCustomResponse(ok: false, msg: e.toString());
+    }
+  }
+
+  Future<StripeCustomResponse> pagarConNuevaTarjeta({@required String amount, @required String currency}) async {
     try {
       final paymentMethod = await StripePayment.paymentRequestWithCardForm(
           CardFormPaymentRequest());
@@ -46,11 +56,45 @@ class StripeService {
     }
   }
 
-  Future pagarApplePayGooglePay(
-      {@required String amount, @required String currency}) async {}
+  Future<StripeCustomResponse> pagarApplePayGooglePay({@required String amount, @required String currency}) async {
+    try {
+      final newAmount = double.parse(amount) /100 ;
+      final token = await StripePayment.paymentRequestWithNativePay(
+        androidPayOptions: AndroidPayPaymentRequest(
+          currencyCode: currency, 
+          totalPrice: amount
+          ), 
+        applePayOptions: ApplePayPaymentOptions(
+          countryCode: 'US',
+          currencyCode: currency,
+          items: [
+            ApplePayItem(
+              label: 'Nombre del producto',
+              amount:'$newAmount' 
+            )
+          ] 
+        ));
 
-  Future<PaymentIntentResponse> _crearPaymentIntent(
-      {@required String amount, @required String currency}) async {
+      final paymentMethod = await StripePayment.createPaymentMethod(
+        PaymentMethodRequest(
+          card: CreditCard(
+            token: token.tokenId
+          )
+        )
+      );   
+
+      final resp = await this._realizarPago(amount: amount, currency: currency, paymentMethod: paymentMethod);
+       
+      await StripePayment.completeNativePayRequest();
+
+      return resp;
+
+    } catch (e) {
+      return StripeCustomResponse(ok: false, msg: e.toString());
+    }
+  }
+
+  Future<PaymentIntentResponse> _crearPaymentIntent({@required String amount, @required String currency}) async {
     try {
       final dio = new Dio();
 
