@@ -1,5 +1,5 @@
 # PayCard_app
-This one is a app to pay with card using Stripe
+This one is an app to pay with card using Stripe
 # App Views
 ![first](https://media.giphy.com/media/51F58jBFcnMTux54EO/giphy.gif)
 ![second](https://media.giphy.com/media/B3VErggKJUYqUc8wgQ/giphy.gif)
